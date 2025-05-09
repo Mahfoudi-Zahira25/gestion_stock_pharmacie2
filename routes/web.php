@@ -39,3 +39,30 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/chef/dashboard', function () {
     return view('chef.dashboard');
 })->name('chef.dashboard');
+
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\DepotController;
+use App\Http\Controllers\FournisseurController;
+use App\Http\Controllers\ProduitController;
+use App\Http\Controllers\CommandeFournisseurController;
+use App\Http\Controllers\DetailCommandeController;
+use App\Http\Controllers\EntreeController;
+use App\Http\Controllers\DetailEntreeController;
+use App\Http\Controllers\CommandeServiceController;
+use App\Http\Controllers\RetourProduitController;
+use App\Http\Controllers\OrdonnanceController;
+use App\Http\Controllers\AlerteStockController;
+
+Route::resource('users', UserController::class);
+Route::resource('depots', DepotController::class);
+Route::resource('fournisseurs', FournisseurController::class);
+Route::resource('produits', ProduitController::class);
+Route::resource('commandes-fournisseur', CommandeFournisseurController::class);
+Route::resource('details-commandes', DetailCommandeController::class);
+Route::resource('entrees', EntreeController::class);
+Route::resource('details-entrees', DetailEntreeController::class);
+Route::resource('commandes-services', CommandeServiceController::class);
+Route::resource('retours-produits', RetourProduitController::class);
+Route::resource('ordonnances', OrdonnanceController::class);
+Route::resource('alertes-stock', AlerteStockController::class);
+
