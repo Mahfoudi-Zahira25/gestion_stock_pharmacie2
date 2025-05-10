@@ -30,10 +30,10 @@ public function up()
     Schema::create('entrees', function (Blueprint $table) {
         $table->id('id_entree');
         
-        $table->foreignId('depot_id')
-              ->constrained('depots')
-              ->onDelete('cascade');
-              
+       $table->unsignedBigInteger('id_depot');
+$table->foreign('id_depot')->references('id_depot')->on('depots')->onDelete('cascade');
+
+   
         $table->foreignId('fournisseur_id')
               ->nullable()
               ->constrained('fournisseurs')

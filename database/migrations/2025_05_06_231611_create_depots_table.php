@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('depots', function (Blueprint $table) {
-            $table->id(); // id_depot
+          $table->id('id_depot');
             $table->string('nom');
             $table->enum('type', ['principal', 'secondaire']); // ou string selon ton choix
             $table->timestamps();

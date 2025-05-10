@@ -17,7 +17,16 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = ['nom_utilisateur', 'prénom', 'mot_de_passe', 'id_dépôt'];
+  protected $fillable = [
+    'name',
+    'prenom',
+    'email',
+    'email_verified_at',
+    'password',
+    'remember_token',
+    'role',
+    'id_depot',
+];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -39,7 +48,13 @@ class User extends Authenticatable
     ];
     public function depot()
 {
-    return $this->belongsTo(Depot::class);
+    return $this->belongsTo(Depot::class, 'depot_id');
 }
+
+public function estResponsablePharmacie()
+{
+    return $this->role === 'pharmacie'; // ou 'responsable_pharmacie' selon ta logique
+}
+// Dans le modèle User
 
 }

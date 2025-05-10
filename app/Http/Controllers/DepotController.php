@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Depot;
-
+use App\Models\Produit;
 use Illuminate\Http\Request;
 
 class DepotController extends Controller
@@ -50,5 +50,10 @@ class DepotController extends Controller
     public function destroy($id) {
         Depot::destroy($id);
         return redirect()->route('depots.index')->with('success', 'Dépôt supprimé avec succès.');
+    }
+     public function dashboard()
+    {
+        $produits = Produit::all(); // ou un service plus intelligent
+        return view('pharmacie.dashboard', compact('produits'));
     }
 }

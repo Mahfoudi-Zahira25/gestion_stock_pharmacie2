@@ -52,6 +52,7 @@ use App\Http\Controllers\CommandeServiceController;
 use App\Http\Controllers\RetourProduitController;
 use App\Http\Controllers\OrdonnanceController;
 use App\Http\Controllers\AlerteStockController;
+use App\Models\Depot;
 
 Route::resource('users', UserController::class);
 Route::resource('depots', DepotController::class);
@@ -66,3 +67,6 @@ Route::resource('retours-produits', RetourProduitController::class);
 Route::resource('ordonnances', OrdonnanceController::class);
 Route::resource('alertes-stock', AlerteStockController::class);
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/pharmacie/dashboard', [Depot::class, 'dashboard'])->name('pharmacie.dashboard');
+});

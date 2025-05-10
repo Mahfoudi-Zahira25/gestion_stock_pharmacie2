@@ -18,7 +18,9 @@ return new class extends Migration
         $table->string('role')->default('pharmacien'); // ou 'responsable'
         $table->unsignedBigInteger('id_depot')->nullable();
 
-        $table->foreign('id_depot')->references('id')->on('depots')->onDelete('set null');
+      
+$table->foreign('depot_id')->references('id_depot')->on('depots')->onDelete('set null');
+
     });
 }
 
