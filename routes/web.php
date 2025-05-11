@@ -58,7 +58,9 @@ Route::resource('users', UserController::class);
 Route::resource('depots', DepotController::class);
 Route::resource('fournisseurs', FournisseurController::class);
 Route::resource('produits', ProduitController::class);
-Route::resource('commandes-fournisseur', CommandeFournisseurController::class);
+// Route::resource('commandes-fournisseur', CommandeFournisseurController::class);
+Route::get('/commande-fournisseur/create', [CommandeFournisseurController::class, 'create'])->name('commande-fournisseur.create');
+
 Route::resource('details-commandes', DetailCommandeController::class);
 Route::resource('entrees', EntreeController::class);
 Route::resource('details-entrees', DetailEntreeController::class);
@@ -70,3 +72,23 @@ Route::resource('alertes-stock', AlerteStockController::class);
 Route::middleware(['auth'])->group(function () {
     Route::get('/pharmacie/dashboard', [Depot::class, 'dashboard'])->name('pharmacie.dashboard');
 });
+
+Route::get('/redirect-after-login', function () {
+    if (auth()->user()->role === 'pharmacien') {
+        return redirect('/pharmacien/dashboard');
+    }
+    // Ajouter d'autres rôles ici si besoin
+    return redirect('/'); // page par défaut
+});
+
+use App\Http\Controllers\PharmacienController;
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/pharmacien/dashboard', [PharmacienController::class, 'index'])->name('pharmacien.dashboard');
+});
+// Route::resource('fournisseurs', FournisseurController::class);
+// Route::resource('produits', ProduitController::class);
+// Route::get('/commandes/create', [CommandeController::class, 'create'])->name('commandes.create');
+// Route::get('/stock', [StockController::class, 'index'])->name('stock.index');
+
+

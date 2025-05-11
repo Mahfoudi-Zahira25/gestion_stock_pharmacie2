@@ -1,29 +1,15 @@
-
 @extends('layouts.app')
 
 @section('content')
-    <h2>Bienvenue Responsable Pharmacie</h2>
+<div class="container text-center mt-5">
+    <h2>Bienvenue {{ auth()->user()->name }} !</h2>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID Produit</th>
-                <th>Nom</th>
-                <th>Quantité Initiale</th>
-                <th>Stock Alerte</th>
-                <th>Stock Sécurité</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($produits as $produit)
-                <tr>
-                    <td>{{ $produit->id }}</td>
-                    <td>{{ $produit->nom }}</td>
-                    <td>{{ $produit->quantite_initiale }}</td>
-                    <td>{{ $produit->stock_alerte }}</td>
-                    <td>{{ $produit->stock_securite }}</td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+    <div class="mt-4">
+        <a href="{{ route('fournisseurs.index') }}" class="btn btn-primary btn-lg m-2">👨‍⚕️ Gestion des fournisseurs</a>
+        <a href="{{ route('commande-fournisseur.create') }}" class="btn btn-success btn-lg m-2">📦 Passer une commande</a>
+        <a href="{{ route('produits.index') }}" class="btn btn-info btn-lg m-2">💊 Gestion des produits</a>
+        
+    </div>
+</div>
 @endsection
+

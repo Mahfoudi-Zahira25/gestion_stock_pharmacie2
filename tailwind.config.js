@@ -18,3 +18,14 @@ module.exports = {
 
     plugins: [require('@tailwindcss/forms')],
 };
+// tailwind.config.js
+// module.exports = {
+//   theme: {
+//     extend: {
+//       colors: {
+//         primaire: '#1F2937', // couleur personnalisée (ex : gris foncé)
+//         secondaire: '#10B981', // vert émeraude
+//       },
+//     },
+//   },
+// }

@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* .bg-primary {
+    @apply bg-primaire;
+}
+.text-primary {
+    @apply text-primaire;
+} */
