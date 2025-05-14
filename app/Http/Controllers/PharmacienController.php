@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DetailEntree;
+use App\Models\Produit;
 use Illuminate\Http\Request;
 
 class PharmacienController extends Controller
@@ -11,5 +13,3 @@ class PharmacienController extends Controller
         return view('pharmacien.dashboard');
     }
 }
-
-

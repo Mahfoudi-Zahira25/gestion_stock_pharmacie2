@@ -51,4 +51,5 @@ class AlerteStockController extends Controller
 
         return redirect()->route('alertes_stock.index')->with('success', 'Alerte supprimée avec succès.');
     }
+    
 }

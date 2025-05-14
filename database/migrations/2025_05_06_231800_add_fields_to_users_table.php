@@ -16,10 +16,13 @@ return new class extends Migration
     Schema::table('users', function (Blueprint $table) {
         $table->string('prenom')->after('name');
         $table->string('role')->default('pharmacien'); // ou 'responsable'
-        $table->unsignedBigInteger('id_depot')->nullable();
+        $table->unsignedBigInteger('depot_id')->nullable()->after('id'); // Créer la colonne
+        // Définir la clé étrangère ensuite
+        $table->foreign('depot_id')->references('id_depot')->on('depots')->onDelete('set null');
+       // $table->unsignedBigInteger('id_depot')->nullable();
 
       
-$table->foreign('depot_id')->references('id_depot')->on('depots')->onDelete('set null');
+//$table->foreign('depot_id')->references('id_depot')->on('depots')->onDelete('set null');
 
     });
 }

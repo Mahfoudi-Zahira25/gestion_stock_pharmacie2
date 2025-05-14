@@ -11,7 +11,6 @@ class DepotSeeder extends Seeder
 {
     $depots = [
         ['nom' => 'Dépôt Principal', 'type' => 'principal'],
-        ['nom' => 'Dépôt Secondaire', 'type' => 'secondaire'],
         ['nom' => 'Dépôt des Urgences', 'type' => 'secondaire'],
         ['nom' => 'Dépôt de Réanimation', 'type' => 'secondaire'],
         ['nom' => 'Dépôt de pédiatrie', 'type' => 'secondaire'],

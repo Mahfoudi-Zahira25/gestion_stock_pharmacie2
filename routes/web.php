@@ -1,48 +1,13 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-*/
-
-Route::get('/', function () {
-    return redirect('/login'); // ✅ Redirige vers la page de login
-});
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-// Ces deux lignes sont optionnelles si tu utilises Laravel Breeze ou Jetstream
-Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
-Route::post('register', [RegisteredUserController::class, 'store']);
-
-require __DIR__.'/auth.php';
-
-
-Route::middleware(['auth'])->group(function () {
-    Route::get('/pharmacien/dashboard', function () {
-        return view('pharmacien.dashboard');
-    })->name('pharmacien.dashboard');
-});
-Route::get('/chef/dashboard', function () {
-    return view('chef.dashboard');
-})->name('chef.dashboard');
-
+use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DepotController;
-use App\Http\Controllers\FournisseurController;
+// Removed duplicate use statement
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\CommandeFournisseurController;
 use App\Http\Controllers\DetailCommandeController;
@@ -52,43 +17,221 @@ use App\Http\Controllers\CommandeServiceController;
 use App\Http\Controllers\RetourProduitController;
 use App\Http\Controllers\OrdonnanceController;
 use App\Http\Controllers\AlerteStockController;
-use App\Models\Depot;
-
-Route::resource('users', UserController::class);
-Route::resource('depots', DepotController::class);
-Route::resource('fournisseurs', FournisseurController::class);
-Route::resource('produits', ProduitController::class);
-// Route::resource('commandes-fournisseur', CommandeFournisseurController::class);
-Route::get('/commande-fournisseur/create', [CommandeFournisseurController::class, 'create'])->name('commande-fournisseur.create');
-
-Route::resource('details-commandes', DetailCommandeController::class);
-Route::resource('entrees', EntreeController::class);
-Route::resource('details-entrees', DetailEntreeController::class);
-Route::resource('commandes-services', CommandeServiceController::class);
-Route::resource('retours-produits', RetourProduitController::class);
-Route::resource('ordonnances', OrdonnanceController::class);
-Route::resource('alertes-stock', AlerteStockController::class);
-
-Route::middleware(['auth'])->group(function () {
-    Route::get('/pharmacie/dashboard', [Depot::class, 'dashboard'])->name('pharmacie.dashboard');
-});
-
-Route::get('/redirect-after-login', function () {
-    if (auth()->user()->role === 'pharmacien') {
-        return redirect('/pharmacien/dashboard');
-    }
-    // Ajouter d'autres rôles ici si besoin
-    return redirect('/'); // page par défaut
-});
-
 use App\Http\Controllers\PharmacienController;
+use App\Http\Controllers\ChefPharmacieController; // Ensure this controller exists in the specified namespace or create it if missing
+use App\Http\Controllers\CmdFournisseurController; // Import CmdFournisseurController to resolve the undefined type error
+use App\Models\Depot;
+use App\Http\Controllers\PediatrieController;
+use App\Http\Controllers\UrgencesController;
+use App\Http\Controllers\ReanimationController;
+use App\Http\Controllers\FournisseurController;
 
+
+
+/*
+|--------------------------------------------------------------------------
+| Routes publiques
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/', fn() => redirect('/login'));
+Route::get('/dashboard', fn() => view('dashboard'))->middleware(['auth', 'verified'])->name('dashboard');
+
+// Enregistrement manuel (si pas avec Breeze ou Jetstream)
+Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
+Route::post('register', [RegisteredUserController::class, 'store']);
+
+require __DIR__.'/auth.php';
+
+/*
+|--------------------------------------------------------------------------
+| Routes protégées par auth
+|--------------------------------------------------------------------------
+*/
 Route::middleware(['auth'])->group(function () {
-    Route::get('/pharmacien/dashboard', [PharmacienController::class, 'index'])->name('pharmacien.dashboard');
-});
-// Route::resource('fournisseurs', FournisseurController::class);
-// Route::resource('produits', ProduitController::class);
-// Route::get('/commandes/create', [CommandeController::class, 'create'])->name('commandes.create');
-// Route::get('/stock', [StockController::class, 'index'])->name('stock.index');
 
+    /*
+    |--------------------------------------------------------------------------
+    | Routes profil utilisateur
+    |--------------------------------------------------------------------------
+    */
+    Route::middleware(['auth'])->group(function () {
+    Route::get('/chef/dashboard', [ChefPharmacieController::class, 'index'])->name('chef.dashboard');
+    Route::get('/pharmacien/dashboard', [PharmacienController::class, 'index'])->name('pharmacien.dashboard');
+    Route::get('/pediatrie/dashboard', [PediatrieController::class, 'index'])->name('pediatrie.dashboard');
+    Route::get('/urgences/dashboard', [UrgencesController::class, 'index'])->name('urgences.dashboard');
+    Route::get('/reanimation/dashboard', [ReanimationController::class, 'index'])->name('reanimation.dashboard');
+});
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/cmd-fournisseurs', [\App\Http\Controllers\CommandeFournisseurController::class, 'index'])->name('cmd_fournisseurs.index');
+    // Fournisseurs
+Route::get('/fournisseurs', [\App\Http\Controllers\FournisseurController::class, 'index'])->name('fournisseurs.index');
+
+// Entrée en stock
+Route::get('/entrer-stock', [\App\Http\Controllers\EntreeController::class, 'index'])->name('entrer_stock.index');
+
+// Sortie de stock
+// Route::get('/sortie-stock', [\App\Http\Controllers\SortieStockController::class, 'index'])->name('sortie_stock.index');
+
+// Commandes internes
+Route::get('/cmd-internes', [\App\Http\Controllers\CommandeServiceController::class, 'index'])->name('cmd_internes.index');
+
+
+Route::get('/chef/fournisseurs', [FournisseurController::class, 'index'])->name('fournisseurs.index');
+Route::get('/chef/fournisseurs', [FournisseurController::class, 'create'])->name('fournisseurs.create');
+Route::post('/chef/fournisseurs', [FournisseurController::class, 'store'])->name('fournisseurs.store');
+Route::get('/chef/fournisseurs/{id}/edit', [FournisseurController::class, 'edit'])->name('fournisseurs.edit');
+Route::put('/chef/fournisseurs/{id}', [FournisseurController::class, 'update'])->name('fournisseurs.update');
+Route::delete('/chef/fournisseurs/{id}', [FournisseurController::class, 'destroy'])->name('fournisseurs.destroy');
+Route::resource('fournisseurs', FournisseurController::class);
+Route::post('/fournisseurs', [FournisseurController::class, 'store'])->name('fournisseurs.store');
+Route::get('/fournisseurs/{id}/edit', [FournisseurController::class, 'edit'])->name('fournisseurs.edit');
+Route::put('/fournisseurs/{id}', [FournisseurController::class, 'update'])->name('fournisseurs.update');
+Route::delete('/fournisseurs/{id}', [FournisseurController::class, 'destroy'])->name('fournisseurs.destroy');
+Route::get('/commandes-fournisseur', [App\Http\Controllers\CommandeFournisseurController::class, 'index'])->name('commandes.fournisseur.index');
+Route::get('/commandes-fournisseur/create', [App\Http\Controllers\CommandeFournisseurController::class, 'create'])->name('commandes.fournisseur.create');
+Route::post('/commandes-fournisseur', [App\Http\Controllers\CommandeFournisseurController::class, 'store'])->name('commandes.fournisseur.store');
+Route::get('/commandes-fournisseur/{id}', [App\Http\Controllers\CommandeFournisseurController::class, 'show'])->name('commandes.fournisseur.show');
+Route::get('/commandes-fournisseur/{id}/edit', [App\Http\Controllers\CommandeFournisseurController::class, 'edit'])->name('commandes.fournisseur.edit');
+Route::put('/commandes-fournisseur/{id}', [App\Http\Controllers\CommandeFournisseurController::class, 'update'])->name('commandes.fournisseur.update');
+Route::delete('/commandes-fournisseur/{id}', [App\Http\Controllers\CommandeFournisseurController::class, 'destroy'])->name('commandes.fournisseur.destroy');
+Route::get('/commandes-fournisseur', [CommandeFournisseurController::class, 'index'])->name('commandes.index');
+Route::get('/commandes-fournisseur/create', [CommandeFournisseurController::class, 'create'])->name('commandes.create');
+Route::get('/livraisons/create', function () {
+    return view('chef.commandes_fournisseur.livraison'); // à créer aussi
+})->name('livraisons.create');
+Route::post('/commandes-fournisseur', [CommandeFournisseurController::class, 'store'])->name('commandes.store');
+Route::get('/commandes-fournisseur/{id}', [CommandeFournisseurController::class, 'show'])->name('commandes.show');
+Route::get('/commandes-fournisseur/{id}/edit', [CommandeFournisseurController::class, 'edit'])->name('commandes.edit');
+Route::put('/commandes-fournisseur/{id}', [CommandeFournisseurController::class, 'update'])->name('commandes.update');
+Route::delete('/commandes-fournisseur/{id}', [CommandeFournisseurController::class, 'destroy'])->name('commandes.destroy');
+Route::get('/commandes-fournisseur', [CommandeFournisseurController::class, 'index'])->name('commandes_fournisseur.index');
+Route::get('/commandes-fournisseur/{id}', [CommandeFournisseurController::class, 'show'])->name('commandes_fournisseur.show');
+Route::get('/commandes-fournisseur/{id}/edit', [CommandeFournisseurController::class, 'edit'])->name('commandes_fournisseur.edit');
+Route::put('/commandes-fournisseur/{id}', [CommandeFournisseurController::class, 'update'])->name('commandes_fournisseur.update');
+Route::delete('/commandes-fournisseur/{id}', [CommandeFournisseurController::class, 'destroy'])->name('commandes_fournisseur.destroy');
+
+Route::get('/commandes-fournisseur/create', [CommandeFournisseurController::class, 'create'])->name('commandes_fournisseur.create');
+Route::post('/commandes-fournisseur', [CommandeFournisseurController::class, 'store'])->name('commandes_fournisseur.store');
+Route::get('/chef/commande-fournisseurs/create', [CommandeFournisseurController::class, 'create'])->name('commande_fournisseurs.create');
+Route::post('/chef/commande-fournisseurs', [CommandeFournisseurController::class, 'store'])->name('commande_fournisseurs.store');
+Route::get('/chef/commande-fournisseurs/{id}/bon-commande', [CommandeFournisseurController::class, 'bonCommande'])->name('commande_fournisseurs.bon_commande');
+Route::resource('commande_fournisseurs', CommandeFournisseurController::class);
+
+
+
+
+
+
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Routes de redirection après login
+    |--------------------------------------------------------------------------
+    */
+    // Route::get('/redirect-after-login', [AuthenticatedSessionController::class, 'redirectAfterLogin'])->name('redirect.after.login');
+
+
+     /*
+    |--------------------------------------------------------------------------
+    | Redirection après login selon rôle
+    |--------------------------------------------------------------------------
+    */
+    // Route::get('/redirect-after-login', function () {
+    //     $user = Auth::user();
+    //     return match ($user->role) {
+    //         'pharmacien' => redirect()->route('pharmacien.dashboard'),
+    //         'responsable_service_pediatrie' => redirect()->route('pediatrie.dashboard'),
+    //         'responsable_service_reanimation' => redirect()->route('reanimation.dashboard'),
+    //         'responsable_service_urgences' => redirect()->route('urgences.dashboard'),
+    //         'responsable_service_chirurgie' => redirect()->route('chirurgie.dashboard'),
+    //         'chef_pharmacie' => redirect()->route('chef.pharmacie.dashboard'),
+    //         default      => abort(403, 'Rôle non autorisé.'),
+    //     };
+    // });
+    
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Dashboards par rôle
+    |--------------------------------------------------------------------------
+    */
+    // Route::get('/pharmacien/dashboard', [PharmacienController::class, 'index'])->name('pharmacien.dashboard');
+    // Route::get('/chef/pharmacie/dashboard', fn() => view('chef.pharmacie.dashboard'))->name('chef.pharmacie.dashboard');
+    // Route::get('/pharmacie/dashboard', [Depot::class, 'dashboard'])->name('pharmacie.dashboard');
+
+    // Dashboards spécifiques aux responsables de service
+    // Route::get('/pediatrie/dashboard', fn() => view('services.pediatrie.dashboard'))->name('pediatrie.dashboard');
+    // Route::get('/reanimation/dashboard', fn() => view('services.reanimation.dashboard'))->name('reanimation.dashboard');
+    // Route::get('/urgences/dashboard', fn() => view('services.urgences.dashboard'))->name('urgences.dashboard');
+    // Route::get('/chirurgie/dashboard', fn() => view('services.chirurgie.dashboard'))->name('chirurgie.dashboard');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Gestion des utilisateurs et entités de base
+    |--------------------------------------------------------------------------
+    */
+    Route::resource('users', UserController::class);
+    Route::resource('depots', DepotController::class);
+    Route::resource('fournisseurs', FournisseurController::class);
+    Route::resource('produits', ProduitController::class);
+    Route::resource('commande-fournisseurs', CommandeFournisseurController::class);
+    Route::resource('details-commandes', DetailCommandeController::class);
+    Route::resource('entrees', EntreeController::class);
+    Route::resource('details-entrees', DetailEntreeController::class);
+    Route::resource('commandes-services', CommandeServiceController::class);
+    Route::resource('retours-produits', RetourProduitController::class);
+    Route::resource('ordonnances', OrdonnanceController::class);
+    Route::resource('alertes-stock', AlerteStockController::class);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Routes spécifiques
+    |--------------------------------------------------------------------------
+    */
+    // Route::get('/commande-fournisseur/create', [CommandeFournisseurController::class, 'create'])->name('commande-fournisseur.create');
+    // Route::get('/stock', fn() => view('pharmacien.stock'))->name('stock.index');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Routes responsables de services
+    |--------------------------------------------------------------------------
+    */
+    // Route::middleware(['auth', 'role:responsable_service_pediatrie'])->prefix('pediatrie')->group(function () {
+    //     Route::get('/stock', fn() => view('services.pediatrie.stock'))->name('pediatrie.stock');
+    //     Route::resource('commandes', CommandeServiceController::class);
+    // });
+
+    // Route::middleware(['auth', 'role:responsable_service_reanimation'])->prefix('reanimation')->group(function () {
+    //     Route::get('/stock', fn() => view('services.reanimation.stock'))->name('reanimation.stock');
+    //     Route::resource('commandes', CommandeServiceController::class);
+    // });
+
+    // Route::middleware(['auth', 'role:responsable_service_urgences'])->prefix('urgences')->group(function () {
+    //     Route::get('/stock', fn() => view('services.urgences.stock'))->name('urgences.stock');
+    //     Route::resource('commandes', CommandeServiceController::class);
+    // });
+
+    // Route::middleware(['auth', 'role:responsable_service_chirurgie'])->prefix('chirurgie')->group(function () {
+    //     Route::get('/stock', fn() => view('services.chirurgie.stock'))->name('chirurgie.stock');
+    //     Route::resource('commandes', CommandeServiceController::class);
+    // });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Déconnexion
+    |--------------------------------------------------------------------------
+    */
+    Route::post('/logout', function () {
+        Auth::logout();
+        return redirect('/');
+    })->name('logout');
+});
+
+Route::get('/commande/{id}/pdf', [CommandeFournisseurController::class, 'exportPDF'])->name('commande.pdf');
 

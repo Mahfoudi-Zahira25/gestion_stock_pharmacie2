@@ -40,13 +40,28 @@ class AuthenticatedSessionController extends Controller
 
     // Redirection selon le rôle
     $user = Auth::user();
+    switch ($user->role) {
+            case 'chef pharmacie':
+                return redirect()->route('chef.dashboard');
+            case 'pharmacien':
+                return redirect()->route('pharmacien.dashboard');
+            case 'responsable de service pédiatrie':
+                return redirect()->route('pediatrie.dashboard');
+            case 'responsable de service urgences':
+                return redirect()->route('urgences.dashboard');
+            case 'responsable de service réanimation':
+                return redirect()->route('reanimation.dashboard');
+            default:
+                Auth::logout();
+                abort(403, 'Rôle inconnu.');
+        }
 
-    if ($user->role === 'pharmacien') {
-        return redirect()->route('pharmacien.dashboard');
-    } elseif ($user->role === 'chef_service') {
-        return redirect()->route('chef.dashboard');
-    } else {
-        return redirect('/'); // Par défaut
-    }
+    // if ($user->role === 'pharmacien') {
+    //     return redirect()->route('pharmacien.dashboard');
+    // } elseif ($user->role === 'chef_service') {
+    //     return redirect()->route('chef.dashboard');
+    // } else {
+    //     return redirect('/'); // Par défaut
+    // }
 }
 }

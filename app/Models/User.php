@@ -51,10 +51,11 @@ class User extends Authenticatable
     return $this->belongsTo(Depot::class, 'depot_id');
 }
 
-public function estResponsablePharmacie()
+public function hasRole($role)
 {
-    return $this->role === 'pharmacie'; // ou 'responsable_pharmacie' selon ta logique
+    return $this->role === $role;
 }
+
 // Dans le modèle User
 
 }

@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Depot extends Model
 {
+    protected $table = 'depots';  // Si le nom de la table est différent
+
+    protected $primaryKey = 'id_depot'; 
     use HasFactory;
     public function users()
 {

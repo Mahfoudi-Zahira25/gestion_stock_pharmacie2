@@ -7,13 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class CommandeFournisseur extends Model
 
-{
-    protected $fillable = ['id_dépôt', 'id_fournisseur', 'date_commande', 'statut'];
+{   
+    use HasFactory;
+     protected $table = 'commande_fournisseurs';
+    protected $fillable = ['id_depot', 'id_fournisseur', 'date_commande', 'statut'];
 
     public function depot()
     {
-        return $this->belongsTo(Depot::class, 'id_dépôt');
+        return $this->belongsTo(Depot::class, 'id_depot');
     }
+   
 
     public function fournisseur()
     {
@@ -23,6 +26,11 @@ class CommandeFournisseur extends Model
     public function details()
     {
         return $this->hasMany(DetailCommande::class, 'id_commande');
+    }
+    public function produits()
+    {
+        return $this->belongsToMany(Produit::class, 'detail_commandes', 'commande_id', 'produit_id')
+                    ->withPivot('quantite');
     }
 }
 
