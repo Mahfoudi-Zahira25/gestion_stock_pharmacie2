@@ -233,5 +233,20 @@ Route::resource('commande_fournisseurs', CommandeFournisseurController::class);
     })->name('logout');
 });
 
-Route::get('/commande/{id}/pdf', [CommandeFournisseurController::class, 'exportPDF'])->name('commande.pdf');
 
+Route::get('/commandes-fournisseur/produits', [CommandeFournisseurController::class, 'afficherProduits'])->name('commande_fournisseurs.produits');
+Route::get('/commandes-fournisseur/create', [CommandeFournisseurController::class, 'step1'])->name('commandes_fournisseur.create');
+Route::post('/commandes-fournisseur/step2', [CommandeFournisseurController::class, 'step2'])->name('commandes_fournisseur.step2');
+Route::post('/commandes-fournisseur/store', [CommandeFournisseurController::class, 'store'])->name('commandes_fournisseur.store');
+// Route pour afficher le formulaire de création (étape 1)
+Route::get('/commandes-fournisseur/create', [CommandeFournisseurController::class, 'create'])->name('commandes_fournisseur.create');
+
+// Route pour envoyer le formulaire (étape 2)
+// Route::post('/commandes-fournisseur/store', [CommandeFournisseurController::class, 'store'])->name('commandes_fournisseur.store');
+// Route pour gérer l'étape 2
+// Route::post('/commandes-fournisseur/step2', [CommandeFournisseurController::class, 'step2'])->name('commandes_fournisseur.step2');
+
+Route::get('/commandes_fournisseur/create', [CommandeFournisseurController::class, 'create'])->name('commandes_fournisseur.create');
+Route::post('/commandes_fournisseur/step2', [CommandeFournisseurController::class, 'step2'])->name('commandes_fournisseur.step2');
+
+Route::post('/commandes-fournisseur', [CommandeFournisseurController::class, 'store'])->name('commandes_fournisseur.store');
