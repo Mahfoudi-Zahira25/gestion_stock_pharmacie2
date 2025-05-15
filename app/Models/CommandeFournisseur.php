@@ -25,7 +25,7 @@ class CommandeFournisseur extends Model
 
     public function details()
     {
-        return $this->hasMany(DetailCommande::class, 'id_commande');
+        return $this->hasMany(DetailCommande::class, 'commande_id');
     }
     public function produits()
     {

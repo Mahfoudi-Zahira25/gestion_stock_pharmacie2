@@ -55,3 +55,4 @@ class ProduitController extends Controller
         return redirect()->route('produits.index')->with('success', 'Produit supprimé avec succès.');
     }
 }
+

@@ -36,8 +36,22 @@
                         <td>{{ \Carbon\Carbon::parse($commande->date_commande)->format('d/m/Y') }}</td>
                         <td>{{ ucfirst($commande->statut) }}</td>
                         <td>
-                            <a href="{{ route('commande_fournisseurs.show', $commande->id) }}" class="btn btn-sm btn-info">Voir</a>
                             <!-- Ajoute ici d'autres boutons si besoin -->
+                             <a href="{{ route('commandes_fournisseur.show_pdf', $commande->id) }}" 
+   class="btn btn-sm btn-primary" 
+   target="_blank">
+    Voir
+</a>
+  <!-- Nouveau bouton imprimer -->
+        <a href="{{ route('commandes_fournisseur.imprimer', $commande->id) }}" target="_blank" class="btn btn-primary">
+            Imprimer
+        </a>
+         <form action="{{ route('commandes_fournisseur.destroy', $commande->id) }}" method="POST" style="display:inline;">
+            @csrf
+            @method('DELETE')
+            <button class="btn btn-danger" onclick="return confirm('Confirmer la suppression ?')">Supprimer</button>
+        </form>
+
                         </td>
                     </tr>
                 @endforeach

@@ -146,21 +146,44 @@ public function store(Request $request)
 
             $commande = CommandeFournisseur::findOrFail($id);
             $commande->update($request->all());
-            return redirect()->route('commandes.index')->with('success', 'Commande mise à jour avec succès.');
+            return redirect()->route('commandes_fournisseur.index')->with('success', 'Commande mise à jour avec succès.');
         }
 
         public function destroy($id) {
             CommandeFournisseur::destroy($id);
-            return redirect()->route('commandes.index')->with('success', 'Commande supprimée avec succès.');
+            return redirect()->route('commandes_fournisseur.index')->with('success', 'Commande supprimée avec succès.');
         }
-    
-    
-
 
 public function afficherProduits()
 {
     $produits = Produit::all(); // Récupère tous les produits
     return view('chef.commandes_fournisseur.produits', compact('produits'));
 }
+
+
+public function exportPDF($id)
+{
+    $commande = CommandeFournisseur::with('fournisseur', 'details.produit')->findOrFail($id);
+
+    $pdf = Pdf::loadView('chef.commandes_fournisseur.pdf', compact('commande'));
+
+    return $pdf->download('bon_commande_fournisseur_'.$commande->id.'.pdf');
+}
+public function showPDF($id)
+{
+    $commande = CommandeFournisseur::with(['fournisseur', 'details.produit'])->findOrFail($id);
+    return view('chef.commandes_fournisseur.bon_commande', compact('commande'));
+}
+
+
+public function imprimer($id)
+{
+    $commande = CommandeFournisseur::with(['fournisseur', 'details.produit'])->findOrFail($id);
+    
+    $pdf = Pdf::loadView('chef.commandes_fournisseur.bon_commande', compact('commande'));
+    
+    return $pdf->stream("bon_commande_{$id}.pdf");
+}
+
 
     }
