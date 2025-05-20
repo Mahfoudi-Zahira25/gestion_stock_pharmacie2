@@ -20,13 +20,21 @@ use App\Http\Controllers\AlerteStockController;
 use App\Http\Controllers\PharmacienController;
 use App\Http\Controllers\ChefPharmacieController; // Ensure this controller exists in the specified namespace or create it if missing
 use App\Http\Controllers\CmdFournisseurController; // Import CmdFournisseurController to resolve the undefined type error
+use App\Http\Controllers\DetailSortieDepotController;
+use App\Http\Controllers\DetailSortieInterneController;
+use App\Http\Controllers\DetailSortiePatientController;
 use App\Models\Depot;
 use App\Http\Controllers\PediatrieController;
 use App\Http\Controllers\UrgencesController;
 use App\Http\Controllers\ReanimationController;
 use App\Http\Controllers\FournisseurController;
-
-
+use App\Http\Controllers\PatientController;
+use App\Http\Controllers\SortieDepotController;
+use App\Http\Controllers\SortieInterneController;
+use App\Http\Controllers\SortieParCommandeController;
+use App\Http\Controllers\SortieVersPatientController;
+use App\Http\Controllers\StockController;
+use App\Http\Controllers\StockProduitController;
 
 /*
 |--------------------------------------------------------------------------
@@ -100,7 +108,7 @@ Route::delete('/commandes-fournisseur/{id}', [App\Http\Controllers\CommandeFourn
 Route::get('/commandes-fournisseur', [CommandeFournisseurController::class, 'index'])->name('commandes.index');
 Route::get('/commandes-fournisseur/create', [CommandeFournisseurController::class, 'create'])->name('commandes.create');
 Route::get('/livraisons/create', function () {
-    return view('chef.commandes_fournisseur.livraison'); // à créer aussi
+    return view('chef.commandes_fournisseur.enregistrer_livraison'); // à créer aussi
 })->name('livraisons.create');
 Route::post('/commandes-fournisseur', [CommandeFournisseurController::class, 'store'])->name('commandes.store');
 Route::get('/commandes-fournisseur/{id}', [CommandeFournisseurController::class, 'show'])->name('commandes.show');
@@ -256,8 +264,91 @@ Route::get('/commandes-fournisseur/pdf/{id}', [CommandeFournisseurController::cl
 Route::get('/commandes_fournisseur/{id}/imprimer', [CommandeFournisseurController::class, 'imprimer'])->name('commandes_fournisseur.imprimer');
 
 
+Route::resource('commande_fournisseurs', CommandeFournisseurController::class);
 
+Route::resource('patients', PatientController::class);
+Route::resource('sortie-vers-patients', SortieVersPatientController::class);
+Route::resource('detail-sortie-patients', DetailSortiePatientController::class);
+Route::resource('sortie-internes', SortieInterneController::class);
+Route::resource('detail-sortie-internes', DetailSortieInterneController::class);
+Route::resource('sortie-depots', SortieDepotController::class);
+Route::resource('detail-sortie-depots', DetailSortieDepotController::class);
+Route::resource('sortie-par-commandes', SortieParCommandeController::class);
+Route::resource('stocks', StockController::class);
+Route::resource('stockProduits', StockProduitController::class);
+Route::resource('alerteStocks', AlerteStockController::class);
+use App\Http\Controllers\EntrerDepotScController;
+use App\Http\Controllers\DetailEntrerDepotScController;
+use App\Http\Controllers\CommandeDepotScController;
+use App\Http\Controllers\DetailCommandeDepotScController;
+use App\Http\Controllers\CommandeDepotScEntrerController;
 
+// Entrées entre dépôts secondaires
+Route::resource('entrer-depot-sc', EntrerDepotScController::class)->names([
+    'index' => 'entrer_depot_sc.index',
+    'create' => 'entrer_depot_sc.create',
+    'store' => 'entrer_depot_sc.store',
+    'show' => 'entrer_depot_sc.show',
+    'edit' => 'entrer_depot_sc.edit',
+    'update' => 'entrer_depot_sc.update',
+    'destroy' => 'entrer_depot_sc.destroy',
+]);
 
+// Détails des entrées
+Route::resource('detail-entrer-depot-sc', DetailEntrerDepotScController::class)->names([
+    'index' => 'detail_entrer_depot_sc.index',
+    'create' => 'detail_entrer_depot_sc.create',
+    'store' => 'detail_entrer_depot_sc.store',
+    'show' => 'detail_entrer_depot_sc.show',
+    'edit' => 'detail_entrer_depot_sc.edit',
+    'update' => 'detail_entrer_depot_sc.update',
+    'destroy' => 'detail_entrer_depot_sc.destroy',
+]);
 
+// Commandes des dépôts secondaires vers la pharmacie
+Route::resource('commande-depot-sc', CommandeDepotScController::class)->names([
+    'index' => 'commande_depot_sc.index',
+    'create' => 'commande_depot_sc.create',
+    'store' => 'commande_depot_sc.store',
+    'show' => 'commande_depot_sc.show',
+    'edit' => 'commande_depot_sc.edit',
+    'update' => 'commande_depot_sc.update',
+    'destroy' => 'commande_depot_sc.destroy',
+]);
 
+// Détails des commandes
+Route::resource('detail-commande-depot-sc', DetailCommandeDepotScController::class)->names([
+    'index' => 'detail_commande_depot_sc.index',
+    'create' => 'detail_commande_depot_sc.create',
+    'store' => 'detail_commande_depot_sc.store',
+    'show' => 'detail_commande_depot_sc.show',
+    'edit' => 'detail_commande_depot_sc.edit',
+    'update' => 'detail_commande_depot_sc.update',
+    'destroy' => 'detail_commande_depot_sc.destroy',
+]);
+
+// Table pivot entre commande et entrée (relation commande <=> réception)
+Route::resource('commande-depot-sc-entrer', CommandeDepotScEntrerController::class)->names([
+    'index' => 'commande_depot_sc_entrer.index',
+    'create' => 'commande_depot_sc_entrer.create',
+    'store' => 'commande_depot_sc_entrer.store',
+    'show' => 'commande_depot_sc_entrer.show',
+    'edit' => 'commande_depot_sc_entrer.edit',
+    'update' => 'commande_depot_sc_entrer.update',
+    'destroy' => 'commande_depot_sc_entrer.destroy',
+]);
+
+Route::get('/livraison/derniere', [CommandeFournisseurController::class, 'livraisonDerniereCommande'])->name('livraison.derniere');
+Route::post('/livraison/enregistrer', [CommandeFournisseurController::class, 'sauvegarderLivraison'])->name('livraison.sauvegarder');
+
+// web.php
+Route::get('/livraison/commande/{id}', [CommandeFournisseurController::class, 'formulaireLivraison'])->name('livraison.formulaire');
+// Route::post('/livraison/sauvegarder', [CommandeFournisseurController::class, 'sauvegarderLivraison'])->name('livraison.sauvegarder');
+
+// Route::post('/livraison/sauvegarder', [EntreeController::class, 'sauvegarder'])->name('livraison.sauvegarder');
+// Route::post('/livraison/sauvegarder', [EntreeController::class, 'sauvegarder'])->name('livraison.sauvegarder');
+Route::get('/sortie_vers_patient', [SortieVersPatientController::class, 'index'])->name('sortie_vers_patient.index');
+
+Route::get('/sortie_depots', [SortieDepotController::class, 'index'])->name('sortie_depots.index');
+Route::get('/commandes_fournisseur/{id}', [EntreeController::class, 'show'])->name('commandes_fournisseur.show');
+Route::resource('detail-entrees', DetailEntreeController::class);

@@ -3,10 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\Produit;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class produitSeeder extends Seeder
+class ProduitSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,42 +14,64 @@ class produitSeeder extends Seeder
      */
     public function run()
     {
-        // Exemple : produit Paracétamol
-        Produit::firstOrCreate(
-            ['nom' => 'Paracétamol'], // condition pour vérifier s’il existe déjà
+        $produits = [
             [
+                'nom' => 'Paracétamol',
                 'type' => 'médicament',
                 'forme' => null,
                 'unite' => null,
-            ]
-        );
-
-        // Exemple : produit Gants stériles
-        Produit::firstOrCreate(
-            ['nom' => 'Gants stériles'],
+                'prix' => 12.50,
+            ],
             [
+                'nom' => 'Gants stériles',
                 'type' => 'dispositif médical',
                 'forme' => null,
                 'unite' => 'paquet',
-            ]
-        );
-        Produit::firstOrCreate(
-            ['nom' => 'Aspirine',],
+                'prix' => 25.00,
+            ],
             [
+                'nom' => 'Aspirine',
                 'type' => 'médicament',
                 'forme' => 'comprimé',
                 'unite' => 'boîte',
-            ]
-        );
-        Produit::firstOrCreate(
-            ['nom' => 'Panadol',],
+                'prix' => 18.00,
+            ],
             [
+                'nom' => 'Panadol',
                 'type' => 'médicament',
                 'forme' => 'comprimé',
                 'unite' => 'boîte',
-            ]
-        );
+                'prix' => 20.00,
+            ],
+            [
+                'nom' => 'Masques chirurgicaux',
+                'type' => 'dispositif médical',
+                'forme' => null,
+                'unite' => 'boîte',
+                'prix' => 30.00,
+            ],
+            [
+                'nom' => 'Seringue 5ml',
+                'type' => 'dispositif médical',
+                'forme' => null,
+                'unite' => 'pièce',
+                'prix' => 5.00,
+            ],
+            [
+                'nom' => 'Ibuprofène',
+                'type' => 'médicament',
+                'forme' => 'gélule',
+                'unite' => 'boîte',
+                'prix' => 16.50,
+            ],
+        ];
 
-        // Tu peux ajouter d'autres produits de la même façon
+        foreach ($produits as $produit) {
+            Produit::firstOrCreate(
+                ['nom' => $produit['nom']],
+                $produit
+            );
+        }
     }
 }
+

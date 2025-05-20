@@ -54,6 +54,7 @@ class DetailCommandeController extends Controller {
         $detail->update($request->all());
         return redirect()->route('detail-commandes.index')->with('success', 'Détail mis à jour avec succès.');
     }
+    
 
     public function destroy($id) {
         DetailCommande::destroy($id);

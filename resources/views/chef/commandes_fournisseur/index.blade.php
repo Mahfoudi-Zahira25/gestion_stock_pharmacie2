@@ -6,7 +6,7 @@
 
     <div class="d-flex justify-content-end mb-4">
        <a href="{{ route('commandes_fournisseur.create') }}" class="btn btn-primary me-2">Passer une commande</a>
-       <a href="{{ route('livraisons.create') }}" class="btn btn-success">Enregistrer une livraison</a>
+<a href="{{ route('livraison.derniere') }}" class="btn btn-primary me-2">Enregistrer une livraison </a>
     </div>
 
     @if(session('success'))
@@ -46,11 +46,16 @@
         <a href="{{ route('commandes_fournisseur.imprimer', $commande->id) }}" target="_blank" class="btn btn-primary">
             Imprimer
         </a>
+        <a href="{{ route('commande_fournisseurs.edit', $commande->id) }}" class="btn btn-warning btn-sm">Modifier</a>
          <form action="{{ route('commandes_fournisseur.destroy', $commande->id) }}" method="POST" style="display:inline;">
             @csrf
             @method('DELETE')
             <button class="btn btn-danger" onclick="return confirm('Confirmer la suppression ?')">Supprimer</button>
         </form>
+        <a href="{{ route('livraison.formulaire', ['id' => $commande->id]) }}" class="btn btn-sm btn-primary">
+    Enregistrer une livraison
+</a>
+
 
                         </td>
                     </tr>

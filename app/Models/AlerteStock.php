@@ -7,18 +7,29 @@ use Illuminate\Database\Eloquent\Model;
 
 class AlerteStock extends Model
 {
+  
     use HasFactory;
 
+    protected $table = 'alerte_stocks';
+    protected $primaryKey = 'id_alert';
+    public $timestamps = true;
+
     protected $fillable = [
-        'produit_id',  // Référence au produit
-        'niveau_stock',  // Niveau du stock
-        'seuil_alerte', // Seuil qui déclenche l'alerte
+        'id_depot',
+        'id_produit',
+        'type_alerte',
         'date_alerte',
     ];
 
-    // Relation avec le produit
+    public function depot()
+    {
+        return $this->belongsTo(Depot::class, 'id_depot', 'id_depot');
+    }
+
     public function produit()
     {
-        return $this->belongsTo(Produit::class);
+        return $this->belongsTo(Produit::class, 'id_produit', 'id');
     }
 }
+
+

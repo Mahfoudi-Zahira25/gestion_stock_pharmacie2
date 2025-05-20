@@ -21,31 +21,76 @@ return array(
     'convert_entities' => true,
 
     'options' => array(
-        /**
-         * The location of the DOMPDF font directory
-         *
-         * The location of the directory where DOMPDF will store fonts and font metrics
-         * Note: This directory must exist and be writable by the webserver process.
-         * *Please note the trailing slash.*
-         *
-         * Notes regarding fonts:
-         * Additional .afm font metrics can be added by executing load_font.php from command line.
-         *
-         * Only the original "Base 14 fonts" are present on all pdf viewers. Additional fonts must
-         * be embedded in the pdf file or the PDF may not display correctly. This can significantly
-         * increase file size unless font subsetting is enabled. Before embedding a font please
-         * review your rights under the font license.
-         *
-         * Any font specification in the source HTML is translated to the closest font available
-         * in the font directory.
-         *
-         * The pdf standard "Base 14 fonts" are:
-         * Courier, Courier-Bold, Courier-BoldOblique, Courier-Oblique,
-         * Helvetica, Helvetica-Bold, Helvetica-BoldOblique, Helvetica-Oblique,
-         * Times-Roman, Times-Bold, Times-BoldItalic, Times-Italic,
-         * Symbol, ZapfDingbats.
-         */
-        "font_dir" => storage_path('fonts'), // advised by dompdf (https://github.com/dompdf/dompdf/pull/782)
+/**
+ * The location of the DOMPDF font directory
+ *
+ * The location of the directory where DOMPDF will store fonts and font metrics
+ * Note: This directory must exist and be writable by the webserver process.
+ * *Please note the trailing slash.*
+ *
+ * Notes regarding fonts:
+ * Additional .afm font metrics can be added by executing load_font.php from command line.
+ *
+ * Only the original "Base 14 fonts" are present on all pdf viewers. Additional fonts must
+ * be embedded in the pdf file or the PDF may not display correctly. This can significantly
+ * increase file size unless font subsetting is enabled. Before embedding a font please
+ * review your rights under the font license.
+ *
+ * Any font specification in the source HTML is translated to the closest font available
+ * in the font directory.
+ *
+ * The pdf standard "Base 14 fonts" are:
+ * Courier, Courier-Bold, Courier-BoldOblique, Courier-Oblique,
+ * Helvetica, Helvetica-Bold, Helvetica-BoldOblique, Helvetica-Oblique,
+ * Times-Roman, Times-Bold, Times-BoldItalic, Times-Italic,
+ * Symbol, ZapfDingbats.
+ */
+// "font_dir" => storage_path('fonts'), // advised by dompdf (https://github.com/dompdf/dompdf/pull/782)
+
+/*
+|--------------------------------------------------------------------------
+| Default Font
+|--------------------------------------------------------------------------
+*/
+'default_font' => 'amiri',
+
+/*
+|--------------------------------------------------------------------------
+| Custom Font Directory
+|--------------------------------------------------------------------------
+*/
+'custom_font_dir' => storage_path('fonts/static/EBGaramond-VariableFont_wght.ttf'),
+
+/*
+|--------------------------------------------------------------------------
+| Custom Font Data
+|--------------------------------------------------------------------------
+*/
+'custom_font_data' => [
+    'amiri' => [
+        'R' => 'Amiri-Regular.ttf',
+        // 'B' => 'Amiri-Bold.ttf',
+        // 'I' => 'Amiri-Italic.ttf',
+        // 'BI' => 'Amiri-BoldItalic.ttf',
+    ],
+],
+
+/*
+|--------------------------------------------------------------------------
+| Font Cache
+|--------------------------------------------------------------------------
+*/
+'font_cache' => storage_path('fonts'),
+
+/*
+|--------------------------------------------------------------------------
+| Temporary Directory
+|--------------------------------------------------------------------------
+*/
+'temp_dir' => sys_get_temp_dir(),
+
+// ... garde les autres options si elles existent ...
+
 
         /**
          * The location of the DOMPDF font cache directory
@@ -55,7 +100,7 @@ return array(
          *
          * Note: This directory must exist and be writable by the webserver process.
          */
-        "font_cache" => storage_path('fonts'),
+        // "font_cache" => storage_path('fonts'),
 
         /**
          * The location of a temporary directory.
@@ -64,7 +109,7 @@ return array(
          * The temporary directory is required to download remote images and when
          * using the PDFLib back end.
          */
-        "temp_dir" => sys_get_temp_dir(),
+        // "temp_dir" => sys_get_temp_dir(),
 
         /**
          * ==== IMPORTANT ====

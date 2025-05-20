@@ -17,7 +17,7 @@ return new class extends Migration
         $table->id();
         // $table->foreignId('id_entrée')->constrained('entrées')->onDelete('cascade');
         $table->foreignId('id_produit')->constrained('produits')->onDelete('cascade');
-        $table->integer('quantité_reçue');
+$table->integer('quantite_recue')->nullable();
         $table->timestamps();
         $table->unsignedBigInteger('id_entree');
 $table->foreign('id_entree')->references('id_entree')->on('entrees')->onDelete('cascade');
