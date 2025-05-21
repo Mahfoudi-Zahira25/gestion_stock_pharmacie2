@@ -352,3 +352,4 @@ Route::get('/sortie_vers_patient', [SortieVersPatientController::class, 'index']
 Route::get('/sortie_depots', [SortieDepotController::class, 'index'])->name('sortie_depots.index');
 Route::get('/commandes_fournisseur/{id}', [EntreeController::class, 'show'])->name('commandes_fournisseur.show');
 Route::resource('detail-entrees', DetailEntreeController::class);
+
