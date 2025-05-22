@@ -35,6 +35,7 @@ use App\Http\Controllers\SortieParCommandeController;
 use App\Http\Controllers\SortieVersPatientController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\StockProduitController;
+use App\Http\Controllers\CommandeDepotScController;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,7 +65,7 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::middleware(['auth'])->group(function () {
-    Route::get('/chef/dashboard', [ChefPharmacieController::class, 'index'])->name('chef.dashboard');
+    Route::get('/chef/dashboard', [ChefPharmacieController::class, 'dashboard'])->name('chef.dashboard');
     Route::get('/pharmacien/dashboard', [PharmacienController::class, 'index'])->name('pharmacien.dashboard');
     Route::get('/pediatrie/dashboard', [PediatrieController::class, 'index'])->name('pediatrie.dashboard');
     Route::get('/urgences/dashboard', [UrgencesController::class, 'index'])->name('urgences.dashboard');
@@ -279,9 +280,10 @@ Route::resource('stockProduits', StockProduitController::class);
 Route::resource('alerteStocks', AlerteStockController::class);
 use App\Http\Controllers\EntrerDepotScController;
 use App\Http\Controllers\DetailEntrerDepotScController;
-use App\Http\Controllers\CommandeDepotScController;
+
 use App\Http\Controllers\DetailCommandeDepotScController;
 use App\Http\Controllers\CommandeDepotScEntrerController;
+use App\Models\CommandeDepotSc;
 
 // Entrées entre dépôts secondaires
 Route::resource('entrer-depot-sc', EntrerDepotScController::class)->names([
@@ -306,7 +308,7 @@ Route::resource('detail-entrer-depot-sc', DetailEntrerDepotScController::class)-
 ]);
 
 // Commandes des dépôts secondaires vers la pharmacie
-Route::resource('commande-depot-sc', CommandeDepotScController::class)->names([
+Route::resource('commande-depot-sc', CommandeDepotSc::class)->names([
     'index' => 'commande_depot_sc.index',
     'create' => 'commande_depot_sc.create',
     'store' => 'commande_depot_sc.store',
@@ -379,3 +381,12 @@ Route::get('/entrees/create-service', [EntreeController::class, 'createEntreeSer
 
 
 Route::get('chef/entrees/recherche-par-date', [EntreeController::class, 'searchByDate'])->name('entrees.searchByDate');
+Route::post('/patients/ajax-store', [PatientController::class, 'ajaxStore'])->name('patients.ajaxStore');
+Route::post('/sortie_vers_patient', [SortieVersPatientController::class, 'store'])->name('sortie_vers_patients.store');
+Route::get('/patients/create', [PatientController::class, 'create'])->name('patients.create');
+Route::post('/patients', [PatientController::class, 'store'])->name('patients.store');
+
+Route::get('/chef/sortie/patient', [SortieVersPatientController::class, 'create'])->name('sortie_vers_patients.create');
+Route::post('/chef/sortie/patient', [SortieVersPatientController::class, 'store'])->name('sortie_vers_patients.store');
+
+Route::get('/chef/entrees/service/create', [App\Http\Controllers\EntreeController::class, 'createEntreeService'])->name('entrees.service.create');

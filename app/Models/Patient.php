@@ -7,11 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Patient extends Model
 {
-      protected $primaryKey = 'id_patient';
-    protected $fillable = ['nom', 'prenom', 'date_nais', 'numero_dossier'];
+    use HasFactory;
 
-    public function sorties()
-    {
-        return $this->hasMany(SortieVersPatient::class, 'id_patient');
-    }
+    protected $table = 'patients';
+    protected $primaryKey = 'id_patient';
+
+    protected $fillable = [
+        'nom',
+        'prenom',
+        'date_nais',
+        'numero_dossier',
+    ];
 }

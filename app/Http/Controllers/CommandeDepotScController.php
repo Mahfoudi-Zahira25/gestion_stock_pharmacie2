@@ -2,47 +2,79 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CommandeDepotSc;
 use Illuminate\Http\Request;
+use App\Models\CmdDepot;
+use App\Models\CommandeDepotSc;
+use App\Models\Depot;
 
-class CommandeDepotScController extends Controller
+class CmdDepotController extends Controller
 {
+    // Afficher la liste des commandes de service
     public function index()
     {
-        $commandes = CommandeDepotSc::all();
-        return view('commande_depot_scs.index', compact('commandes'));
+        $commandes = commandedepotsc::with(['depotSource', 'depotDest'])->orderByDesc('date_cmd')->get();
+        return view('cmd_depot.index', compact('commandes'));
     }
 
+    // Afficher le formulaire de création
     public function create()
     {
-        return view('commande_depot_scs.create');
+        $depots = Depot::all();
+        return view('cmd_depot.create', compact('depots'));
     }
 
+    // Enregistrer une nouvelle commande
     public function store(Request $request)
     {
-        CommandeDepotSc::create($request->all());
-        return redirect()->route('commande_depot_scs.index');
+        $request->validate([
+            'depot_source_id' => 'required|exists:depots,id_depot',
+            'depot_dest_id'   => 'required|exists:depots,id_depot',
+            'date_cmd'        => 'required|date',
+            'statut'          => 'required|string',
+        ]);
+
+        commandedepotsc::create($request->all());
+
+        return redirect()->route('cmd_depot.index')->with('success', 'Commande créée avec succès.');
     }
 
-    public function show(CommandeDepotSc $commandeDepotSc)
+    // Afficher une commande spécifique
+    public function show($id)
     {
-        return view('commande_depot_scs.show', compact('commandeDepotSc'));
+        $commande = commandedepotsc::with(['depotSource', 'depotDest', 'details'])->findOrFail($id);
+        return view('cmd_depot.show', compact('commande'));
     }
 
-    public function edit(CommandeDepotSc $commandeDepotSc)
+    // Afficher le formulaire d'édition
+    public function edit($id)
     {
-        return view('commande_depot_scs.edit', compact('commandeDepotSc'));
+        $commande = commandedepotsc::findOrFail($id);
+        $depots = Depot::all();
+        return view('cmd_depot.edit', compact('commande', 'depots'));
     }
 
-    public function update(Request $request, CommandeDepotSc $commandeDepotSc)
+    // Mettre à jour une commande
+    public function update(Request $request, $id)
     {
-        $commandeDepotSc->update($request->all());
-        return redirect()->route('commande_depot_scs.index');
+        $request->validate([
+            'depot_source_id' => 'required|exists:depots,id_depot',
+            'depot_dest_id'   => 'required|exists:depots,id_depot',
+            'date_cmd'        => 'required|date',
+            'statut'          => 'required|string',
+        ]);
+
+        $commande = CommandeDepotSc::findOrFail($id);
+        $commande->update($request->all());
+
+        return redirect()->route('cmd_depot.index')->with('success', 'Commande mise à jour avec succès.');
     }
 
-    public function destroy(CommandeDepotSc $commandeDepotSc)
+    // Supprimer une commande
+    public function destroy($id)
     {
-        $commandeDepotSc->delete();
-        return redirect()->route('commande_depot_scs.index');
+        $commande = CommandeDepotSc::findOrFail($id);
+        $commande->delete();
+
+        return redirect()->route('commandedepotsc.index')->with('success', 'Commande supprimée avec succès.');
     }
 }

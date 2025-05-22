@@ -16,8 +16,12 @@ class EntreeController extends Controller
 {
     public function index()
     {
-        $entrees = EntreeFournisseur::with(['depot', 'fournisseur'])->get();
-        return view('entrees.index', compact('entrees'));
+        $depotsSecondaires = \App\Models\Depot::where('type', 'secondaire')->get();
+        $produits = \App\Models\Produit::all();
+        return view('chef.entrees.create_entree', [
+            'depotsSecondaires' => $depotsSecondaires,
+            'produits' => $produits
+        ]);
     }
     
     
