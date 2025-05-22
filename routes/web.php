@@ -371,3 +371,11 @@ Route::post('/chef/entrees/service/store', [EntreeController::class, 'storeEntre
 Route::post('/chef/entrees/service/store', [EntreeController::class, 'storeEntreeService'])->name('entrees.service.store');
 
 Route::get('/entrees/create-service', [EntreeController::class, 'createEntreeService'])->name('entrees.create-service');
+// Route::get('/entrees/search-by-date', [EntreeController::class, 'searchByDate'])->name('entrees.searchByDate');
+// Route::get('/entrees/recherche-par-date', [App\Http\Controllers\EntreeController::class, 'searchByDate'])->name('entrees.searchByDate');
+
+
+// routes/web.php
+
+
+Route::get('chef/entrees/recherche-par-date', [EntreeController::class, 'searchByDate'])->name('entrees.searchByDate');

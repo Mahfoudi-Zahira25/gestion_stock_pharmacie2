@@ -17,7 +17,7 @@
 
                 {{-- ✅ CHAMP DE DATE AVEC NOM CORRECT --}}
                 <div class="form-group mb-4">
-                    <label for="date_entree" class="form-label"><strong>📥 Date de réception :</strong></label>
+                    <label for="date_entree" class="form-label"><strong> Date de réception :</strong></label>
                     <input type="date" name="date_entree" class="form-control" required>
                 </div>
 

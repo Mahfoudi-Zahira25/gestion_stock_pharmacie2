@@ -167,4 +167,18 @@ public function storeEntreeService(Request $request)
         return redirect()->route('entrees.index')->with('success', 'Entrée supprimée avec succès.');
     }
 
+
+public function searchByDate(Request $request)
+{
+    $date = $request->input('date');
+    $entrees = [];
+
+    if ($date) {
+        $entrees = EntreeFournisseur::whereDate('date_entree', $date)
+            ->with(['depot', 'fournisseur', 'details.produit'])
+            ->get();
+    }
+
+    return view('chef.entrees.recherche_par_date', compact('entrees', 'date'));
+}
 }

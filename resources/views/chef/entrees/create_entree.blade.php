@@ -3,10 +3,18 @@
 @section('content')
 <div class="container my-5">
     <div class="card shadow-sm border-0">
+         {{-- Bouton recherche par date placé ici --}}
+            <div class="mb-4 text-end">
+                <a href="{{ route('entrees.searchByDate') }}" class="btn btn-outline-primary">
+                    <i class="bi bi-search"></i> Chercher une entrée par date
+                </a>
+            </div>
         <div class="card-header bg-primary text-white">
             <h3 class="mb-0">Enregistrement d’une Entrée – Service Hospitalier</h3>
         </div>
         <div class="card-body">
+
+       
 
             {{-- Message de succès --}}
             @if(session('success'))
@@ -92,6 +100,8 @@
                     </button>
                 </div>
             </form>
+
+            
 
         </div>
     </div>
