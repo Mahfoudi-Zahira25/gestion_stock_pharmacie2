@@ -7,6 +7,7 @@ use App\Models\EntreeFournisseur;
 use App\Models\Depot;
 use App\Models\DetailEntree;
 use App\Models\Fournisseur;
+use App\Models\Produit;
 use App\Models\StockProduit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +19,67 @@ class EntreeController extends Controller
         $entrees = EntreeFournisseur::with(['depot', 'fournisseur'])->get();
         return view('entrees.index', compact('entrees'));
     }
+    
+    
+public function createEntreeService()
+{
+    $depotsSecondaires = Depot::where('type', 'secondaire')->get();
+    $produits = Produit::all();
+    return view('chef.entrees.create_entree', [
+    'depotsSecondaires' => $depotsSecondaires,
+    'produits' => $produits
+]);
 
+}
+
+public function storeEntreeService(Request $request)
+{
+    $request->validate([
+        'date_entree' => 'required|date',
+        'id_depot' => 'required|exists:depots,id_depot',
+        'quantite_recue' => 'required|array',
+    ]);
+
+    DB::beginTransaction();
+
+    try {
+        $entree = EntreeFournisseur::create([
+             'commande_id' => null,
+            // 'commande_id' => 'nullable|exists:commandes,id',
+            'date_entree' => $request->date_entree,
+            'id_depot' => $request->id_depot,
+            'fournisseur_id' => null,
+        ]);
+
+        // $request->quantite_recue est un tableau associatif [id_produit => quantite]
+        foreach ($request->quantite_recue as $produitId => $quantite) {
+            if ($quantite > 0) {
+                DetailEntree::create([
+                    'id_entree' => $entree->id_entree,
+                    'id_produit' => $produitId,
+                    'quantite_recue' => $quantite,
+                ]);
+            }
+        }
+
+        DB::commit();
+
+        return redirect()->route('entrees.service.create')->with('success', 'Entrée enregistrée avec succès.');
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return back()->withErrors(['error' => 'Erreur : ' . $e->getMessage()]);
+    }
+}
+
+
+// public function create()
+// {
+//     $services = Depot::where('type', 'secondaire')->get(); // les services hospitaliers
+//     $produits = Produit::all();
+
+//     return view('chef.commandes_fournisseur.create_entree', compact('services', 'produits'));
+// }
 
 
 
@@ -68,60 +129,8 @@ class EntreeController extends Controller
     // {
     //     $commande = CommandeFournisseur::findOrFail($commande_id);
 
-    //     // On suppose que la pharmacie hospitalière est le dépôt principal
-    //     $depotPrincipal = Depot::where('type', 'principal')->first();
+  
 
-    //     return view('chef.commandes_fournisseur.enregistrer_livraison', [
-    //         'commande' => $commande,
-    //         'depot_id' => $depotPrincipal->id
-    //     ]);
-    // }
-
-    // // ...existing code...
-
-
-    // public function store(Request $request)
-    // {
-    //     // ✅ Validation des données
-    //     $request->validate([
-    //         'commande_id' => 'required|exists:commande_fournisseurs,id',
-    //         'date_entree' => 'required|date',
-    //         'produit_id' => 'required|array',
-    //         'quantite_recue' => 'required|array',
-    //     ]);
-
-    //     // ✅ Création de l'entree (livraison)
-    //     $entree = EntreeFournisseur::create([
-    //         'commande_id' => $request->commande_id,
-    //         'date_entree' => $request->date_entree,
-    //         'id_depot' => 1, // adapte cette valeur selon ta logique (ex: id du dépôt principal)
-    //         'fournisseur_id' => \App\Models\CommandeFournisseur::find($request->commande_id)->fournisseur_id,
-    //     ]);
-
-    //     // ✅ Enregistrement des détails
-    //     foreach ($request->produit_id as $index => $produitId) {
-    //         DetailEntree::create([
-    //             'id_entree' => $entree->id_entree,
-    //             'id_produit' => $produitId,
-    //             'quantite_recue' => $request->quantite_recue[$index],
-    //         ]);
-    //     }
-
-    //     return redirect()->back()->with('success', 'Livraison enregistrée avec succès.');
-    // }
-
-
-
-
-
-
-
-
-
-
-    // public function show($id) {
-    //     $entree = EntreeFournisseur::with(['depot', 'fournisseur'])->findOrFail($id);
-    //     return view('entrees.show', compact('entree'));}
     public function show($id)
     {
         $entree = EntreeFournisseur::with('details.produit')->findOrFail($id);
@@ -157,58 +166,5 @@ class EntreeController extends Controller
         EntreeFournisseur::destroy($id);
         return redirect()->route('entrees.index')->with('success', 'Entrée supprimée avec succès.');
     }
-
-
-
-    // 
-
-
-    // public function sauvegarder(Request $request)
-    // {
-    //    $request->validate([
-    //         'commande_id' => 'required|exists:commande_fournisseurs,id',
-    //         'date_reception' => 'required|date',
-    //         'produit_id' => 'required|array',
-    //         'quantite_recue' => 'required|array',
-    //     ]);
-
-    //     try {
-    //         DB::beginTransaction();
-
-    //         // Créer l'entrée
-    //         $entree = EntreeFournisseur::create([
-    //             'commande_id'    => $request->commande_id,
-    //             'date_entree'    => $request->date_reception,
-    //             'id_depot'       => 1, // à adapter selon ton projet
-    //             'fournisseur_id' => \App\Models\CommandeFournisseur::find($request->commande_id)->id_fournisseur,
-    //         ]);
-
-    //         // Enregistrer les détails
-    //         foreach ($request->produit_id as $index => $idProduit) {
-    //             $quantite = $request->quantite_recue[$index];
-
-    //             // DetailEntree::create([
-    //             //     'id_entree'      => $entree->id,
-    //             //     'id_produit'     => $idProduit,
-    //             //     'quantite_recue' => $quantite,
-    //             // ]);
-    //             DetailEntree::create([
-    // 'id_entree' => $entree->id,
-    //     'id_produit'     => $idProduit,
-    //     'quantite_recue' => $quantite, // sans accent, exactement comme dans ta table
-    // ]);
-
-    //         }
-
-    //         DB::commit();
-    //         return redirect()->route('entrees.index')->with('success', 'Livraison enregistrée avec succès.');
-
-    //     } catch (\Exception $e) {
-    //         DB::rollBack();
-    //         return back()->with('error', 'Erreur lors de l\'enregistrement : ' . $e->getMessage());
-    //     }
-    // }
-
-
 
 }

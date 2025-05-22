@@ -353,3 +353,21 @@ Route::get('/sortie_depots', [SortieDepotController::class, 'index'])->name('sor
 Route::get('/commandes_fournisseur/{id}', [EntreeController::class, 'show'])->name('commandes_fournisseur.show');
 Route::resource('detail-entrees', DetailEntreeController::class);
 
+
+// entreede pharma d'apres le service 
+Route::get('/entrees/service/create', [EntreeController::class, 'createEntreeService'])
+     ->name('entrees.service.create');
+
+Route::post('/entrees/service/store', [EntreeController::class, 'storeEntreeService'])
+     ->name('entrees.service.store');
+
+
+Route::get('/chef/entrees/service/create', [EntreeController::class, 'createEntreeService'])
+     ->name('entrees.service.create');
+Route::post('/chef/entrees/service/store', [EntreeController::class, 'storeEntreeService'])
+     ->name('entrees.service.store');
+    
+
+Route::post('/chef/entrees/service/store', [EntreeController::class, 'storeEntreeService'])->name('entrees.service.store');
+
+Route::get('/entrees/create-service', [EntreeController::class, 'createEntreeService'])->name('entrees.create-service');

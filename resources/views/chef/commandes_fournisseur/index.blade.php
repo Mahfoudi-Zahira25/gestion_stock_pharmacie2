@@ -6,7 +6,7 @@
 
     <div class="d-flex justify-content-end mb-4">
        <a href="{{ route('commandes_fournisseur.create') }}" class="btn btn-primary me-2">Passer une commande</a>
-<a href="{{ route('livraison.derniere') }}" class="btn btn-primary me-2">Enregistrer une livraison </a>
+<a href="{{ route('livraison.derniere') }}" class="btn btn-success me-2">Enregistrer une livraison </a>
     </div>
 
     @if(session('success'))
@@ -38,12 +38,12 @@
                         <td>
                             <!-- Ajoute ici d'autres boutons si besoin -->
                              <a href="{{ route('commandes_fournisseur.show_pdf', $commande->id) }}" 
-   class="btn btn-sm btn-primary" 
+   class="btn btn-sm btn-info" 
    target="_blank">
     Voir
 </a>
   <!-- Nouveau bouton imprimer -->
-        <a href="{{ route('commandes_fournisseur.imprimer', $commande->id) }}" target="_blank" class="btn btn-primary">
+        <a href="{{ route('commandes_fournisseur.imprimer', $commande->id) }}" target="_blank" class="btn btn-dark">
             Imprimer
         </a>
         <a href="{{ route('commande_fournisseurs.edit', $commande->id) }}" class="btn btn-warning btn-sm">Modifier</a>
@@ -52,7 +52,7 @@
             @method('DELETE')
             <button class="btn btn-danger" onclick="return confirm('Confirmer la suppression ?')">Supprimer</button>
         </form>
-        <a href="{{ route('livraison.formulaire', ['id' => $commande->id]) }}" class="btn btn-sm btn-primary">
+        <a href="{{ route('livraison.formulaire', ['id' => $commande->id]) }}" class="btn btn-sm btn-success">
     Enregistrer une livraison
 </a>
 

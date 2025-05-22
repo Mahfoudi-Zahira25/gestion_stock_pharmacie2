@@ -17,7 +17,7 @@
                 <tr>
                     <th>Nom Fournisseur</th>
                     <th>Type</th>
-                    <th>Adresse</th>x
+                    <th>Adresse</th>
                     <th>Téléphone</th>
                     <th>Actions</th>
                 </tr>
