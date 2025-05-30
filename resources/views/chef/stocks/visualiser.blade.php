@@ -16,14 +16,15 @@
                     </tr>
                 </thead>
                 <tbody>
+                
                     @forelse($stocks as $stock)
                         <tr>
                             <td>{{ $stock->nom_produit }}</td>
-                            <td>{{ $stock->quantite }}</td>
+                            <td>{{ $stock->quantite ?? 0 }}</td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="2" class="text-center text-muted">Aucun stock trouvé.</td>
+                            <td colspan="2" class="text-center text-muted">Aucun produit trouvé.</td>
                         </tr>
                     @endforelse
                 </tbody>

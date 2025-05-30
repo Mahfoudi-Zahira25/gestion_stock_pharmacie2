@@ -6,6 +6,7 @@ use App\Models\StockProduit;
 use App\Models\Stock;
 use App\Models\Produit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class StockProduitController extends Controller
 {
@@ -69,5 +70,18 @@ class StockProduitController extends Controller
     {
         $stockProduit->delete();
         return redirect()->route('stockProduits.index')->with('success', 'Produit en stock supprimé avec succès.');
+    }
+
+    public function visualiser()
+    {
+        $stocks = DB::table('produits')
+            ->leftJoin('stock_produits', 'produits.id', '=', 'stock_produits.id_produit')
+            ->select(
+                'produits.nom as nom_produit',
+                'stock_produits.quantite'
+            )
+            ->get();
+
+        return view('chef.stocks.visualiser', compact('stocks'));
     }
 }

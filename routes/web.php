@@ -400,3 +400,5 @@ Route::get('/sortie_depots/service', [SortieDepotController::class, 'serviceRech
 Route::get('/alertes-stock', [App\Http\Controllers\AlerteStockController::class, 'produitsEnAlerte'])->name('alertes-stock.index');
 
 Route::get('/visualiser-stock', [App\Http\Controllers\StockController::class, 'visualiser'])->name('visualiser_stock.index');
+
+Route::get('/visualiser-stock', [StockProduitController::class, 'visualiser'])->name('visualiser_stock.index');

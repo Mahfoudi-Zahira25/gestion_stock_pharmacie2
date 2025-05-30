@@ -63,6 +63,18 @@ public function storeEntreeService(Request $request)
                     'id_produit' => $produitId,
                     'quantite_recue' => $quantite,
                 ]);
+                
+                // Met à jour ou crée le stock du produit
+                $stockProduit = \App\Models\StockProduit::where('id_produit', $produitId)->first();
+                if ($stockProduit) {
+                    $stockProduit->quantite += $quantite;
+                    $stockProduit->save();
+                } else {
+                    \App\Models\StockProduit::create([
+                        'id_produit' => $produitId,
+                        'quantite' => $quantite,
+                    ]);
+                }
             }
         }
 
@@ -110,13 +122,35 @@ public function storeEntreeService(Request $request)
 
             // dd($entree);
 
-            foreach ($request->produit_id as $i => $produitId) {
-                DetailEntree::create([
-                    'id_entree' => $entree->id_entree,
-                    'id_produit' => $produitId,
-                    'quantite_recue' => $request->quantite_recue[$i],
-                ]);
-            }
+            // foreach ($request->produit_id as $i => $produitId) {
+            //     DetailEntree::create([
+            //         'id_entree' => $entree->id_entree,
+            //         'id_produit' => $produitId,
+            //         'quantite_recue' => $request->quantite_recue[$i],
+            //     ]);
+            // }
+foreach ($request->produit_id as $i => $produitId) {
+    $quantite = $request->quantite_recue[$i];
+
+    DetailEntree::create([
+        'id_entree' => $entree->id_entree,
+        'id_produit' => $produitId,
+        'quantite_recue' => $quantite,
+    ]);
+
+    // Met à jour ou crée le stock du produit
+    $stockProduit = \App\Models\StockProduit::where('id_produit', $produitId)->first();
+    if ($stockProduit) {
+        $stockProduit->quantite += $quantite;
+        $stockProduit->save();
+    } else {
+        \App\Models\StockProduit::create([
+            'id_produit' => $produitId,
+            'quantite' => $quantite,
+        ]);
+    }
+}
+
 
             DB::commit();
             return back()->with('success', 'Livraison enregistrée avec succès.');
