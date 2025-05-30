@@ -390,3 +390,13 @@ Route::get('/chef/sortie/patient', [SortieVersPatientController::class, 'create'
 Route::post('/chef/sortie/patient', [SortieVersPatientController::class, 'store'])->name('sortie_vers_patients.store');
 
 Route::get('/chef/entrees/service/create', [App\Http\Controllers\EntreeController::class, 'createEntreeService'])->name('entrees.service.create');
+Route::get('/sortie_depots/create', [SortieDepotController::class, 'create'])->name('sortie_depots.create');
+
+Route::post('/sortie_depots', [SortieDepotController::class, 'store'])->name('sortie.store');
+
+Route::get('/sortie_depots/service', [SortieDepotController::class, 'serviceRecherche'])->name('sortie.serviceRecherche');
+
+
+Route::get('/alertes-stock', [App\Http\Controllers\AlerteStockController::class, 'produitsEnAlerte'])->name('alertes-stock.index');
+
+Route::get('/visualiser-stock', [App\Http\Controllers\StockController::class, 'visualiser'])->name('visualiser_stock.index');

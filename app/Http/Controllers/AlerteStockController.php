@@ -6,13 +6,28 @@ use App\Models\AlerteStock;
 use App\Models\Depot;
 use App\Models\Produit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+
 
 class AlerteStockController extends Controller
 {
     public function index()
     {
-        $alertes = AlerteStock::with('depot', 'produit')->paginate(20);
-        return view('alerteStocks.index', compact('alertes'));
+        $produitsAlerte = DB::table('stocks')
+            ->join('depots', 'stocks.id_depot', '=', 'depots.id_depot')
+            ->join('stock_produits', 'stocks.id_stock_produit', '=', 'stock_produits.id_stock_produit')
+            ->join('produits', 'stock_produits.id_produit', '=', 'produits.id')
+            ->select(
+                'depots.nom as depot_nom',
+                'produits.nom as produit_nom',
+                'stock_produits.quantite',
+                'stock_produits.stock_alerte'
+            )
+            ->whereColumn('stock_produits.quantite', '<', 'stock_produits.stock_alerte')
+            ->get();
+
+        return view('chef.alerteStocks.produits_en_alerte', compact('produitsAlerte'));
     }
 
     public function create()
@@ -67,5 +82,20 @@ class AlerteStockController extends Controller
     {
         $alerteStock->delete();
         return redirect()->route('alerteStocks.index')->with('success', 'Alerte supprimée avec succès.');
+    }
+
+    public function produitsEnAlerte()
+    {
+        $produitsAlerte = DB::table('stock_produits')
+            ->join('produits', 'stock_produits.id_produit', '=', 'produits.id')
+            ->select(
+                'produits.nom as nom',
+                'stock_produits.quantite',
+                'stock_produits.stock_alerte'
+            )
+            ->whereColumn('stock_produits.quantite', '<', 'stock_produits.stock_alerte')
+            ->get();
+
+        return view('chef.alerteStocks.produits_en_alerte', compact('produitsAlerte'));
     }
 }

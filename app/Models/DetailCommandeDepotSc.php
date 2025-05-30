@@ -25,7 +25,7 @@ class DetailCommandeDepotSc extends Model
 
     public function produit()
     {
-        return $this->belongsTo(Produit::class, 'id_produit');
+        return $this->belongsTo(\App\Models\Produit::class, 'id_produit', 'id');
     }
 }
 

@@ -24,7 +24,7 @@
                 </a>
             </li>
             <li>
-                <a class="dropdown-item d-flex align-items-center gap-1" href="{{ route('sortie_depots.index') }}">
+                <a class="dropdown-item d-flex align-items-center gap-1" href="{{ route('sortie_depots.create') }}">
                     <i class="bi bi-building"></i> Sortie vers Service
                 </a>
             </li>
@@ -35,6 +35,17 @@
        >
         <i class="bi bi-clipboard-data"></i> Commande Interne
     </a>
+        </a>
+    <a class="nav-link d-flex align-items-center gap-1 px-3 py-2 {{ request()->is('visualiser-stock*') ? 'active bg-primary text-white' : 'text-primary' }}"
+       href="{{ route('visualiser_stock.index') }}">
+        <i class="bi bi-eye"></i> Visualiser Stock
+    </a>
+        </a>
+        <a class="nav-link d-flex align-items-center gap-1 px-3 py-2 {{ request()->is('alertes-stock*') ? 'active bg-primary text-white' : 'text-primary' }}"
+   href="{{ route('alertes-stock.index') }}">
+    <i class="bi bi-exclamation-triangle"></i> Alerte Stock
+</a>
+
 </nav>
 
 <style>

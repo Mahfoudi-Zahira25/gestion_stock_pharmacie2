@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Stock;
 use App\Models\Depot;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class StockController extends Controller
 {
@@ -58,5 +59,15 @@ class StockController extends Controller
     {
         $stock->delete();
         return redirect()->route('stocks.index')->with('success', 'Stock supprimé avec succès.');
+    }
+
+    public function visualiser()
+    {
+        $stocks = DB::table('stock_produits')
+            ->join('produits', 'stock_produits.id_produit', '=', 'produits.id')
+            ->select('produits.nom as nom_produit', 'stock_produits.quantite')
+            ->get();
+
+        return view('chef.stocks.visualiser', compact('stocks'));
     }
 }

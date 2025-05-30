@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\SortieDepot;
+use App\Models\Depot;
+use App\Models\CommandeDepotSc;
+use App\Models\DetailCommandeDepotSc;
 use Illuminate\Http\Request;
 
 class SortieDepotController extends Controller
@@ -15,7 +18,19 @@ class SortieDepotController extends Controller
 
     public function create()
     {
-        return view('sortie_depots.create');
+        $services = Depot::all();
+        $commandes = CommandeDepotSc::all();
+        // Liste fixe des types de commande
+        $types_commande = [
+            'bon mensuelle',
+            'bon retour',
+            'bon échange',
+            'bon décharge',
+            'bon ordonnance',
+            'bon supplémentaire'
+        ];
+
+        return view('chef.sortie.service', compact('services', 'commandes', 'types_commande'));
     }
 
     public function store(Request $request)
@@ -28,7 +43,12 @@ class SortieDepotController extends Controller
 
         SortieDepot::create($request->all());
 
-        return redirect()->route('sortie_depots.index')->with('success', 'Sortie dépôt créée avec succès.');
+        // Recharge les données nécessaires pour la vue
+        $services = Depot::all();
+        $commandes = CommandeDepotSc::all();
+
+        return view('chef.sortie.service', compact('services', 'commandes'))
+            ->with('success', 'Sortie dépôt créée avec succès.');
     }
 
     public function show(SortieDepot $sortieDepot)
@@ -59,5 +79,28 @@ class SortieDepotController extends Controller
         $sortieDepot->delete();
 
         return redirect()->route('sortie_depots.index')->with('success', 'Sortie dépôt supprimée avec succès.');
+    }
+
+    public function serviceRecherche(Request $request)
+    {
+        $services = Depot::all();
+        $types_commande = [
+            'bon mensuelle',
+            'bon retour',
+            'bon échange',
+            'bon décharge',
+            'bon ordonnance',
+            'bon supplémentaire'
+        ];
+
+        $commande_id = $request->input('commande_id');
+        $commandeProduits = collect();
+
+        if ($commande_id) {
+            // Charge les détails AVEC la relation produit
+            $commandeProduits = \App\Models\DetailCommandeDepotSc::with('produit')->where('id_cmd_sc', $commande_id)->get();
+        }
+
+        return view('chef.sortie.service', compact('services', 'types_commande', 'commandeProduits', 'commande_id'));
     }
 }

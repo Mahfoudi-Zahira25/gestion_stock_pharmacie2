@@ -9,24 +9,18 @@ class UpdateCommandeFournisseursTable extends Migration
     public function up()
     {
         Schema::table('commande_fournisseurs', function (Blueprint $table) {
-            // Suppression des anciennes colonnes si besoin
+            // Supprime seulement ce qui n’existe pas déjà
             $table->dropForeign(['utilisateur_id']);
             $table->dropColumn('utilisateur_id');
-
-            $table->dropForeign(['depot_id']);
-            $table->dropColumn('depot_id');
-
             $table->dropColumn('type');
             $table->dropColumn('remarque');
 
-            // Ajout des nouvelles colonnes
-            $table->unsignedBigInteger('id_depot');
+            // Ajoute seulement les nouvelles colonnes
             $table->unsignedBigInteger('id_fournisseur');
             $table->date('date_commande');
             $table->string('statut')->default('en cours');
 
-            // Déclaration des clés étrangères
-            $table->foreign('id_depot')->references('id')->on('depots')->onDelete('cascade');
+            // Déclare les clés étrangères
             $table->foreign('id_fournisseur')->references('id')->on('fournisseurs')->onDelete('cascade');
         });
     }
@@ -34,14 +28,13 @@ class UpdateCommandeFournisseursTable extends Migration
     public function down()
     {
         Schema::table('commande_fournisseurs', function (Blueprint $table) {
-            $table->dropForeign(['id_depot']);
             $table->dropForeign(['id_fournisseur']);
 
-            $table->dropColumn(['id_depot', 'id_fournisseur', 'date_commande', 'statut']);
+            $table->dropColumn(['id_fournisseur', 'date_commande', 'statut']);
 
             // (optionnel) Réajouter les anciennes colonnes si rollback
             $table->unsignedBigInteger('utilisateur_id');
-            $table->unsignedBigInteger('depot_id');
+            $table->unsignedBigInteger('id_depot');
             $table->string('type');
             $table->text('remarque')->nullable();
         });

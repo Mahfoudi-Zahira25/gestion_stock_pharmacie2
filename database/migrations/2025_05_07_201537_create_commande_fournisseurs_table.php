@@ -19,13 +19,14 @@ return new class extends Migration
     Schema::create('commande_fournisseurs', function (Blueprint $table) {
         $table->id();
         $table->unsignedBigInteger('utilisateur_id');
-        $table->unsignedBigInteger('depot_id');
+        $table->unsignedBigInteger('id_depot');
         $table->enum('type', ['mensuelle', 'retour', 'échange', 'ordonnance', 'décharge', 'supplémentaire']);
         $table->text('remarque')->nullable();
         $table->timestamps();
 
         $table->foreign('utilisateur_id')->references('id')->on('users')->onDelete('cascade');
-        $table->foreign('depot_id')->references('id_depot')->on('depots')->onDelete('cascade');
+        $table->foreign('id_depot')->references('id_depot')->on('depots')->onDelete('cascade');
+       
     });
 }
 
