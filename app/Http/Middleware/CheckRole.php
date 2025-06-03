@@ -23,11 +23,8 @@ public function handle(Request $request, Closure $next, ...$roles)
         return $next($request);
     }
 
-//     // Rediriger ou refuser l'accès si l'utilisateur n'a pas le bon rôle
-//     return redirect()->route('dashboard')->withErrors('Accès interdit.');
-// }
-// Rediriger ou refuser l'accès si l'utilisateur n'a pas le bon rôleAdd commentMore actions
-    return redirect()->route('dashboard')->withErrors('Accès interdit.');
+    // Rediriger ou refuser l'accès si l'utilisateur n'a pas le bon rôle
     abort(403, 'Accès refusé');
 }
+
 }

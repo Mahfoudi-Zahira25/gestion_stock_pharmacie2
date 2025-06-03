@@ -34,20 +34,19 @@ class MajeurRadioController extends Controller
 
         // Création de la commande
         $commande = CommandeDepotSc::create([
-            'depot_source_id' => $request->depot_source_id,
-            'depot_dest_id'   => $request->depot_dest_id,
-            'date_cmd'        => $request->date_cmd,
-            'statut'          => 'en attente',
-            'type_commande'   => $request->type_commande,
+            'id_depot_sc'         => 7, // ID du dépôt radiologie (exemple)
+            'id_depot_principale' => 1, // ID du dépôt principal (exemple)
+            'type_commande'       => $request->type_commande,
+            'date_cmd'            => $request->date_cmd,
+            'statut'              => 'en attente',
         ]);
 
         // Ajout des produits à la commande
-        foreach ($request->produit_id as $i => $produitId) {
-            $quantite = $request->quantite[$i];
-            DetailCommande::create([
-                'cmd_depot_id' => $commande->id,
-                'produit_id'   => $produitId,
-                'quantite_cmd' => $quantite,
+        foreach ($request->produit_id as $index => $produitId) {
+            \App\Models\DetailCommandeDepotSc::create([
+                'id_cmd_sc'      => $commande->id_cmd_sc, // ou $commande->id selon ton modèle
+                'id_produit'     => $produitId,
+                'quantite_cmd'   => $request->quantite[$index],
             ]);
         }
 
