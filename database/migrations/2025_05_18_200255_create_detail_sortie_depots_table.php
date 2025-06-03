@@ -16,7 +16,7 @@ return new class extends Migration
             $table->timestamps();
 
             // Clés étrangères
-            $table->foreign('id_sortie_depot')->references('id_sortie_depot')->on('sortie_depots')->onDelete('cascade');
+            $table->foreign('id_sortie_depot')->references('id')->on('sortie_depots')->onDelete('cascade');
             $table->foreign('id_produit')->references('id')->on('produits')->onDelete('restrict');
         });
     }

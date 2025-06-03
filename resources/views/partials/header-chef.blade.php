@@ -1,4 +1,5 @@
 {{-- filepath: resources/views/partials/header-chef.blade.php --}}
+{{-- filepath: resources/views/partials/header-chef.blade.php --}}
 <nav class="nav nav-pills justify-content-center gap-2 my-3 shadow-sm rounded bg-white py-2" style="font-size: 1.1rem;">
     <a class="nav-link d-flex align-items-center gap-1 px-3 py-2 {{ request()->is('fournisseurs*') ? 'active bg-primary text-white' : 'text-primary' }}"
        href="{{ route('fournisseurs.index') }}">

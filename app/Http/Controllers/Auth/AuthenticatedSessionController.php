@@ -45,8 +45,8 @@ class AuthenticatedSessionController extends Controller
                 return redirect()->route('chef.dashboard');
             case 'pharmacien':
                 return redirect()->route('pharmacien.dashboard');
-            case 'responsable de service pédiatrie':
-                return redirect()->route('pediatrie.dashboard');
+            case 'majeur':
+                return redirect()->route('majeur.dashboard');
             case 'responsable de service urgences':
                 return redirect()->route('urgences.dashboard');
             case 'responsable de service réanimation':

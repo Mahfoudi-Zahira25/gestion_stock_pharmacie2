@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\EntrerDepotSc;
+use App\Models\Depot;
+use App\Models\Produit;
 use Illuminate\Http\Request;
 
 class EntrerDepotScController extends Controller
@@ -15,7 +17,9 @@ class EntrerDepotScController extends Controller
 
     public function create()
     {
-        return view('entrer_depot_scs.create');
+        $depots = Depot::all();
+        $produits = Produit::all();
+        return view('majeur.stock_entrer', compact('depots', 'produits'));
     }
 
     public function store(Request $request)

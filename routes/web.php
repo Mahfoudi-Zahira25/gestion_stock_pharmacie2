@@ -283,6 +283,7 @@ use App\Http\Controllers\DetailEntrerDepotScController;
 
 use App\Http\Controllers\DetailCommandeDepotScController;
 use App\Http\Controllers\CommandeDepotScEntrerController;
+use App\Http\Controllers\MajeurRadioController;
 use App\Models\CommandeDepotSc;
 
 // Entrées entre dépôts secondaires
@@ -402,3 +403,61 @@ Route::get('/alertes-stock', [App\Http\Controllers\AlerteStockController::class,
 Route::get('/visualiser-stock', [App\Http\Controllers\StockController::class, 'visualiser'])->name('visualiser_stock.index');
 
 Route::get('/visualiser-stock', [StockProduitController::class, 'visualiser'])->name('visualiser_stock.index');
+
+
+// Formulaire principal de sortie vers service
+Route::get('/sortie/service', [SortieDepotController::class, 'form'])->name('sortie.form');
+
+// Recherche et affichage des produits de la commande interne
+Route::get('/sortie/service/recherche', [SortieDepotController::class, 'serviceRecherche'])->name('sortie.serviceRecherche');
+
+// Validation de la sortie (enregistrement)
+Route::post('/sortie/service/enregistrer', [SortieDepotController::class, 'enregistrer'])->name('sortie.enregistrer');
+
+// Bon de livraison
+Route::get('/sortie/service/bon/{id}', [SortieDepotController::class, 'bonLivraison'])->name('sortie.bonLivraison');
+
+Route::post('/sortie/enregistrer', [SortieDepotController::class, 'enregistrer'])->name('sortie.enregistrer');
+
+
+
+
+
+
+
+
+
+
+
+// Groupe routes majeurs
+Route::middleware(['auth', 'role:majeur'])->group(function () {
+    Route::get('/majeur/dashboard', [MajeurRadioController::class, 'dashboard'])->name('majeur.dashboard');
+
+    // Ajoute cette ligne pour la commande
+    Route::get('/majeur/commande/passer', [App\Http\Controllers\MajeurRadioController::class, 'passerCommande'])->name('commande.passer');
+
+    // Ajoute cette route pour l'entrée de stock
+    Route::get('/majeur/stock/entrer', [EntrerDepotscController::class, 'create'])->name('stock.entrer');
+    Route::post('/majeur/stock/entrer', [EntrerDepotscController::class, 'store'])->name('entree_depot.store');
+    Route::get('/majeur/stock/entrees/historique', [EntrerDepotscController::class, 'historique'])->name('entree_depot.historique');
+
+    // Ajoute cette route pour la sortie de stock
+    Route::get('/majeur/stock/sortie', [SortieInterneController::class, 'create'])->name('stock.sortie');
+    Route::post('/majeur/stock/sortie', [SortieInterneController::class, 'store'])->name('sortieinternes.store');
+
+    // Ajoute cette route pour visualiser le stock
+    Route::get('/majeur/stock/visualiser', function () {
+        return view('majeur.stock_visualiser');
+    })->name('stock.visualiser');
+
+    Route::post('/majeur/commande/store', [App\Http\Controllers\MajeurRadioController::class, 'storeCommande'])->name('commande.store');
+    Route::get('/majeur/sortie/commandes-traitees', [SortieDepotController::class, 'commandesTraitees'])->name('stock.entrer.parcommande');
+    Route::get('/majeur/sortie/historique', [SortieInterneController::class, 'historique'])->name('sortieinternes.historique');
+});
+
+
+
+
+
+
+
