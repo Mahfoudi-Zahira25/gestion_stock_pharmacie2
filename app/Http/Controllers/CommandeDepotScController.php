@@ -12,7 +12,7 @@ class CmdDepotController extends Controller
     // Afficher la liste des commandes de service
     public function index()
     {
-        $commandes = commandedepotsc::with(['depotSource', 'depotDest'])->orderByDesc('date_cmd')->get();
+        $commandes = CommandeDepotSc::with('depotSource')->get();
         return view('cmd_depot.index', compact('commandes'));
     }
 

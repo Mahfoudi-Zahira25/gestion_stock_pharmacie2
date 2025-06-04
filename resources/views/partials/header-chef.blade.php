@@ -1,6 +1,10 @@
 {{-- filepath: resources/views/partials/header-chef.blade.php --}}
 {{-- filepath: resources/views/partials/header-chef.blade.php --}}
 <nav class="nav nav-pills justify-content-center gap-2 my-3 shadow-sm rounded bg-white py-2" style="font-size: 1.1rem;">
+    <a class="nav-link d-flex align-items-center gap-1 px-3 py-2 {{ request()->is('chef/dashboard') ? 'active bg-primary text-white' : 'text-primary' }}"
+       href="{{ route('chef.dashboard') }}">
+        <i class="bi bi-house-door"></i> Tableau de bord
+    </a>
     <a class="nav-link d-flex align-items-center gap-1 px-3 py-2 {{ request()->is('fournisseurs*') ? 'active bg-primary text-white' : 'text-primary' }}"
        href="{{ route('fournisseurs.index') }}">
         <i class="bi bi-truck"></i> Fournisseurs
@@ -32,8 +36,7 @@
         </ul>
     </div>
     <a class="nav-link d-flex align-items-center gap-1 px-3 py-2 {{ request()->is('cmd-internes*') ? 'active bg-primary text-white' : 'text-primary' }}"
-       {{-- href="{{ route('cmd_internes.index') }}" --}}
-       >
+        href="{{ route('commande_interne.index') }}" >
         <i class="bi bi-clipboard-data"></i> Commande Interne
     </a>
         </a>

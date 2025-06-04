@@ -21,7 +21,7 @@ class CommandeDepotSc extends Model
 
     public function details()
     {
-        return $this->hasMany(DetailCommandeDepotSc::class, 'id_cmd_sc');
+        return $this->hasMany(\App\Models\DetailCommandeDepotSc::class, 'id_cmd_sc');
     }
 
     public function depotDemandeur()
@@ -37,6 +37,11 @@ class CommandeDepotSc extends Model
     public function entrees()
     {
         return $this->belongsToMany(EntrerDepotSc::class, 'commande_depot_sc_entrer', 'id_cmd_sc', 'id_entrer_depot_sc');
+    }
+
+    public function depotSource()
+    {
+        return $this->belongsTo(\App\Models\Depot::class, 'id_depot_sc');
     }
 }
 

@@ -199,10 +199,13 @@ Route::get('/commandes-fournisseur/pdf/{id}', [CommandeFournisseurController::cl
 Route::get('/chef/commandes_fournisseur/{id}/imprimer', [CommandeFournisseurController::class, 'imprimer'])->name('commandes_fournisseur.imprimer');
 Route::get('/chef/livraison/derniere', [CommandeFournisseurController::class, 'livraisonDerniereCommande'])->name('livraison.derniere');
 Route::post('/chef/livraison/enregistrer', [CommandeFournisseurController::class, 'sauvegarderLivraison'])->name('livraison.sauvegarder');
-
-// web.php
 Route::get('/chef/livraison/commande/{id}', [CommandeFournisseurController::class, 'formulaireLivraison'])->name('livraison.formulaire');
 
+Route::get('/chef/commande_interne', [ChefPharmacieController::class, 'commandesInternes'])->name('commande_interne.index');
+Route::get('/chef/commande_interne/{id}', [App\Http\Controllers\ChefPharmacieController::class, 'showCommandeInterne'])
+        ->name('chef.commande_interne.show');
+
+Route::post('/chef/commande_interne/{id}/livrer', [ChefPharmacieController::class, 'livrerCommandeInterne'])->name('chef.commande_interne.livrer');
 
 });
 
