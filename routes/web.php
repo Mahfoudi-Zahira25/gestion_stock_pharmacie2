@@ -206,6 +206,14 @@ Route::get('/chef/commande_interne/{id}', [App\Http\Controllers\ChefPharmacieCon
         ->name('chef.commande_interne.show');
 
 Route::post('/chef/commande_interne/{id}/livrer', [ChefPharmacieController::class, 'livrerCommandeInterne'])->name('chef.commande_interne.livrer');
+Route::get('/sortie/bon-livraison/{id}', [App\Http\Controllers\SortieDepotController::class, 'bonLivraison'])
+    ->name('sortie.bonLivraison');
+
+
+Route::get('/stocks/visualiser', [App\Http\Controllers\ProduitController::class, 'visualiserStock'])->name('visualiserstock');
+Route::get('/produits/create', [ProduitController::class, 'create'])->name('produits.create');
+Route::post('/produits', [ProduitController::class, 'store'])->name('produits.store');
+
 
 });
 

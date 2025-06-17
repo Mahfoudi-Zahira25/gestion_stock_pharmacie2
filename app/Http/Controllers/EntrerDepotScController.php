@@ -49,4 +49,9 @@ class EntrerDepotScController extends Controller
         $entrerDepotSc->delete();
         return redirect()->route('entrer_depot_scs.index');
     }
+    public function historique()
+    {
+        $entrees = \App\Models\EntrerDepotSc::orderBy('created_at', 'desc')->get();
+        return view('majeur.historique_entrees', compact('entrees'));
+    }
 }

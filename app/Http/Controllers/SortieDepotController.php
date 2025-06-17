@@ -167,4 +167,12 @@ class SortieDepotController extends Controller
         $sortie = SortieDepot::with('details.produit', 'service')->findOrFail($id);
         return view('chef.sortie.bon_livraison_service', compact('sortie'));
     }
+
+    public function commandesTraitees()
+    {
+        // Exemple : récupère toutes les commandes déjà traitées (statut = 'livrée')
+        $commandes = \App\Models\CommandeDepotSc::where('statut', 'livrée')->orderBy('date_cmd', 'desc')->get();
+
+        return view('chef.sortie.commandes_traitees', compact('commandes'));
+    }
 }
